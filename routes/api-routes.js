@@ -1,9 +1,8 @@
-
 const db = require("../models");
 
 module.exports = (app) => {
     app.get("/api/workouts", (req, res) => {
-        db.WorkOut.aggregate(
+        db.Workout.aggregate(
             [
 
                 {
@@ -11,8 +10,8 @@ module.exports = (app) => {
                 }
             ])
 
-            .then(workoutDB => {
-                res.json(workoutDB);
+            .then(WorkoutDB => {
+                res.json(WorkoutDB);
             })
             .catch(err => {
                 res.json(err);
@@ -20,11 +19,10 @@ module.exports = (app) => {
     });
 
     app.get("/api/workouts/range", (req, res) => {
-        db.WorkOut.aggregate(
+        db.Workout.aggregate(
             [
                 {
                     $addFields: {
-                        totalDuration: { $sum: "$exercises.duration" },
                         totalDuration: { $sum: "$exercises.duration", },
                         totalWeight: { $sum: "$exercises.weight" },
                         totalSets: { $sum: "$exercises.sets" },
@@ -37,9 +35,9 @@ module.exports = (app) => {
 
             ]
         )
-            .then(workoutDB => {
-                console.log(workoutDB)
-                res.json(workoutDB);
+            .then(WorkoutDB => {
+                console.log(WorkoutDB)
+                res.json(WorkoutDB);
             })
             .catch(err => {
                 res.json(err);
@@ -50,18 +48,18 @@ module.exports = (app) => {
         let id = req.params.id
         if (req.body.type == "cardio") {
 
-            db.WorkOut.findByIdAndUpdate(id, { $push: { exercises: req.body } })
-                .then(workoutDB => {
-                    console.log(workoutDB)
-                    res.json(workoutDB);
+            db.Workout.findByIdAndUpdate(id, { $push: { exercises: req.body } })
+                .then(WorkoutDB => {
+                    console.log(WorkoutDB)
+                    res.json(WorkoutDB);
                 })
                 .catch(err => {
                     res.json(err);
                 })
         } else if (req.body.type === "resistance") {
-            db.WorkOut.findByIdAndUpdate(id, { $push: { exercises: req.body } })
-                .then(workoutDB => {
-                    res.json(workoutDB);
+            db.Workout.findByIdAndUpdate(id, { $push: { exercises: req.body } })
+                .then(workoutsDB => {
+                    res.json(workoutsDB);
                 })
                 .catch(err => {
                     res.json(err);
@@ -70,9 +68,9 @@ module.exports = (app) => {
     })
 
     app.post("/api/workouts", ({ body }, res) => {
-        db.WorkOut.create({})
-            .then(workoutDB => {
-                res.json(workoutDB);
+        db.Workout.create({})
+            .then(WorkoutDB => {
+                res.json(WorkoutDB);
             })
             .catch(err => {
                 res.json(err);
